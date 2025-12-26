@@ -1,0 +1,33 @@
+platform:
+  api_host: 0.0.0.0
+  api_port: 8080
+  frontend_url: http://localhost:5173
+  log_level: INFO
+  max_cypher_rows: 10000
+  max_cypher_time_ms: 5000
+  auth:
+    enabled: true
+    jwt_secret: changeme
+    token_ttl_minutes: 60
+neo4j:
+  uri: bolt://192.168.40.129:7687
+  user: neo4j
+  password: neo4j
+  database: neo4j
+  max_connection_pool_size: 50
+  encrypted: false
+kubernetes:
+  kubeconfig_path: ~/.kube/config
+  verify_ssl: true
+  request_timeout_seconds: 15
+  allowed_contexts: []
+sync:
+  enabled: true
+  schedule: "0 */6 * * *"
+  batch_size: 200
+security:
+  allow_external_neo4j: false
+  allow_destructive_cypher: false
+export:
+  default_format: png
+  allow_svg: true

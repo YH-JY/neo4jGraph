@@ -1,0 +1,39 @@
+version: "3.9"
+services:
+  neo4j:
+    image: neo4j:5.17
+    container_name: attack-neo4j
+    restart: unless-stopped
+    environment:
+      - NEO4J_AUTH=neo4j/neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j-data:/data
+      - ./scripts/init_neo4j.cypher:/docker-entrypoint-initdb.d/init.cypher:ro
+
+  backend:
+    build: ./backend
+    depends_on:
+      - neo4j
+    env_file:
+      - ./backend/.env.example
+    environment:
+      - APP_CONFIG_FILE=/config/application.yaml
+    volumes:
+      - ./backend:/app
+      - ./config:/config:ro
+      - ~/.kube:/kube:ro
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - "4173:4173"
+
+volumes:
+  neo4j-data:

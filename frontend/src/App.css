@@ -1,0 +1,49 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top-bar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: #0b1120;
+  border-bottom: 1px solid #1e293b;
+}
+
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr 320px;
+  grid-template-rows: 1fr auto;
+  background: #0f172a;
+}
+
+.sidebar {
+  background: #111c3a;
+  border-right: 1px solid #1e293b;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.graph-panel {
+  position: relative;
+  background: #0f172a;
+}
+
+.details-panel {
+  background: #111c3a;
+  border-left: 1px solid #1e293b;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.cypher-console {
+  grid-column: 1 / span 3;
+  border-top: 1px solid #1e293b;
+  background: #0b1120;
+  padding: 12px 16px;
+}
