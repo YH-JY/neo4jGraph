@@ -3,14 +3,16 @@ from __future__ import annotations
 import re
 import threading
 from contextlib import contextmanager
-from typing import Any, Dict, Iterable, List
+from typing import Any, Dict, Iterable, List, TYPE_CHECKING
 
 from neo4j import GraphDatabase, basic_auth
-from neo4j.work.simple import Session
 from tenacity import retry, stop_after_attempt, wait_fixed
 
 from app.core.logging import get_logger
 from app.core.settings import get_settings
+
+if TYPE_CHECKING:
+    from neo4j import Session
 
 logger = get_logger("neo4j")
 _driver = None
@@ -38,7 +40,7 @@ def get_driver():
 
 
 @contextmanager
-def get_session() -> Iterable[Session]:
+def get_session() -> Iterable["Session"]:
     driver = get_driver()
     settings = get_settings()
     session = driver.session(database=settings.neo4j.database)
