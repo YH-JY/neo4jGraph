@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import json
 from collections import OrderedDict
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 from app.attack.rules import AttackAnalyzer
 from app.schemas.graph import GraphEdge, GraphNode
@@ -36,7 +37,7 @@ class GraphBuilder:
             statements.append(
                 {
                     "query": f"MERGE (n:{node.label} {{key: $key}}) SET n += $props",
-                    "params": {"key": node.key, "props": {**node.properties, "key": node.key}},
+                    "params": {"key": node.key, "props": _sanitize_properties({**node.properties, "key": node.key})},
                 }
             )
         for edge in edges:
@@ -46,7 +47,7 @@ class GraphBuilder:
                     "params": {
                         "source": edge.source,
                         "target": edge.target,
-                        "props": edge.properties,
+                        "props": _sanitize_properties(edge.properties),
                     },
                 }
             )
