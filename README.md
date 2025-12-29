@@ -7,8 +7,9 @@
 - **数据采集**：基于 kubeconfig 读取 Pod/Node/ServiceAccount/Role/Binding/Secret/ConfigMap/Service/Ingress 等资源。
 - **攻击建模**：自动检测高权限 RBAC 绑定、特权容器/hostPath 等逃逸场景，并生成 `AttackTechnique` 节点与 `POSSIBLE_ATTACK_PATH` 边。
 - **Neo4j 写入**：统一节点/关系建模（RUNS_ON、USES_SERVICEACCOUNT、CONTAINS、BOUND_TO、CAN_ACCESS 等），通过 Bolt 批量写入并附带索引脚本。
-- **API 能力**：配置管理、集群导入、Cypher 执行、节点/边详情、预置查询、图谱导出（PNG/SVG/JSON/Cypher）、认证与速率限制。
+- **API 能力**：配置管理、集群导入、Cypher 执行、节点/边详情、预置查询、图谱导出（PNG/SVG/JSON/Cypher），默认开放便于联调、演示。
 - **前端可视化**：React + Cytoscape.js 绘制多布局图谱，侧边栏提供导入、预置查询与过滤，右侧详情面板展示属性，底部 Console 输入 Cypher。
+- **领导驾驶舱展示**：顶部态势条、左侧 KPI 卡与无登录体验，便于会议演示与管理层浏览。
 - **部署支持**：提供 Dockerfile、docker-compose、一键初始化脚本与示例 kubeconfig。
 
 ## 目录结构
@@ -43,7 +44,7 @@ docs/      需求文档与说明
    npm install
    npm run dev -- --host
    ```
-5. 浏览器访问 `http://localhost:5173`，通过侧边认证面板登录（默认 `admin/admin123`），导入集群或示例数据，运行 Cypher 并交互查看图谱。
+5. 浏览器访问 `http://localhost:5173`，无需登录即可导入集群或示例数据、运行 Cypher 并在驾驶舱视图中查看图谱。
 
 ## Docker Compose（可选）
 
@@ -57,7 +58,6 @@ docker compose up --build
 
 ## 常用 API（部分）
 
-- `POST /api/auth/token` — 使用默认管理员凭据获取 JWT。
 - `POST /api/import/k8s?mock=true` — 导入集群或示例数据。
 - `POST /api/cypher` — 执行任意 Cypher，自动施加行数/耗时限制并返回图谱结构。
 - `GET /api/preset-queries` — 预置查询列表。

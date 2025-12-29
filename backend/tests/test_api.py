@@ -1,16 +1,7 @@
-import pytest
 from fastapi.testclient import TestClient
 
-from app.core.security import verify_token
 from app.main import app
 from app.services.import_service import ImportService
-
-
-@pytest.fixture(autouse=True)
-def override_auth():
-    app.dependency_overrides[verify_token] = lambda: "test"
-    yield
-    app.dependency_overrides.pop(verify_token, None)
 
 
 def test_health_endpoint():

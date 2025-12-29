@@ -9,13 +9,6 @@ import yaml
 from pydantic import BaseModel, Field
 
 
-class AuthSettings(BaseModel):
-    enabled: bool = True
-    jwt_secret: str = Field(default_factory=lambda: os.getenv("JWT_SECRET", "please_change_me"))
-    jwt_algorithm: str = Field(default_factory=lambda: os.getenv("JWT_ALGORITHM", "HS256"))
-    token_ttl_minutes: int = Field(default=int(os.getenv("JWT_TTL_MINUTES", 60)))
-
-
 class PlatformSettings(BaseModel):
     api_host: str = Field(default=os.getenv("API_HOST", "0.0.0.0"))
     api_port: int = Field(default=int(os.getenv("API_PORT", 8080)))
@@ -24,7 +17,6 @@ class PlatformSettings(BaseModel):
     max_cypher_rows: int = Field(default=int(os.getenv("MAX_CYPHER_ROWS", 10000)))
     max_cypher_time_ms: int = Field(default=int(os.getenv("MAX_CYPHER_TIME_MS", 5000)))
     allow_cors_origins: list[str] = Field(default_factory=list)
-    auth: AuthSettings = Field(default_factory=AuthSettings)
 
 
 class Neo4jSettings(BaseModel):

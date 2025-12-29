@@ -3,7 +3,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import auth, config, cypher, export, graph, importer, metadata
+from app.api.routes import config, cypher, export, graph, importer, metadata
 from app.core.logging import configure_logging
 from app.core.settings import get_settings
 from app.services.import_service import ImportService
@@ -22,7 +22,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router)
 app.include_router(config.router)
 app.include_router(importer.router)
 app.include_router(cypher.router)

@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import cytoscape, { Core } from 'cytoscape';
 import coseBilkent from 'cytoscape-cose-bilkent';
 
-import { useGraphLayout } from '../hooks/useGraphLayout';
+import { useGraphLayout, LayoutType } from '../hooks/useGraphLayout';
 import { useGraphStore } from '../state/useStore';
 
 cytoscape.use(coseBilkent);
 
 const nodeStyles: Record<string, { color: string; border: string }> = {
-  Pod: { color: '#3b82f6', border: '#1d4ed8' },
+  Pod: { color: '#4f46e5', border: '#312e81' },
   Container: { color: '#22d3ee', border: '#0e7490' },
   Node: { color: '#a78bfa', border: '#7c3aed' },
   ServiceAccount: { color: '#34d399', border: '#059669' },
@@ -17,6 +17,12 @@ const nodeStyles: Record<string, { color: string; border: string }> = {
   Secret: { color: '#ec4899', border: '#be185d' },
   Service: { color: '#60a5fa', border: '#2563eb' },
 };
+
+const layouts: Array<{ key: LayoutType; label: string }> = [
+  { key: 'cose', label: '智能' },
+  { key: 'concentric', label: '同心' },
+  { key: 'breadthfirst', label: '分层' },
+];
 
 const GraphCanvas = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -41,7 +47,7 @@ const GraphCanvas = () => {
             color: '#e2e8f0',
             'font-size': 10,
             'text-wrap': 'wrap',
-            'text-max-width': 80,
+            'text-max-width': 120,
             'text-outline-width': 0,
           },
         },
@@ -67,12 +73,10 @@ const GraphCanvas = () => {
       ],
     });
     instance.on('tap', 'node', (event) => {
-      const data = event.target.data();
-      setSelected({ type: 'node', data: data.meta });
+      setSelected({ type: 'node', data: event.target.data().meta });
     });
     instance.on('tap', 'edge', (event) => {
-      const data = event.target.data();
-      setSelected({ type: 'edge', data: data.meta });
+      setSelected({ type: 'edge', data: event.target.data().meta });
     });
     setCy(instance);
     return () => {
@@ -115,28 +119,26 @@ const GraphCanvas = () => {
   }, [cy, nodes, edges, layoutConfig]);
 
   return (
-    <div className="graph-panel">
-      <div style={{ display: 'flex', gap: 8, padding: '8px 16px', borderBottom: '1px solid #1e293b' }}>
-        <span>布局:</span>
-        {['cose', 'concentric', 'breadthfirst'].map((name) => (
-          <button
-            key={name}
-            onClick={() => setLayout(name as any)}
-            style={{
-              background: layout === name ? '#2563eb' : '#1e293b',
-              border: 'none',
-              color: '#e2e8f0',
-              padding: '4px 10px',
-              borderRadius: 6,
-              cursor: 'pointer',
-            }}
-          >
-            {name}
-          </button>
-        ))}
+    <section className="graph-panel surface-card">
+      <div className="graph-toolbar">
+        <div>
+          <h3>拓扑总览</h3>
+          <p>多布局切换以匹配不同汇报视角</p>
+        </div>
+        <div className="layout-chips">
+          {layouts.map((item) => (
+            <button
+              key={item.key}
+              className={`layout-chip ${layout === item.key ? 'active' : ''}`}
+              onClick={() => setLayout(item.key)}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <div ref={containerRef} style={{ width: '100%', height: 'calc(100% - 48px)' }} />
-    </div>
+      <div ref={containerRef} className="graph-container" />
+    </section>
   );
 };
 

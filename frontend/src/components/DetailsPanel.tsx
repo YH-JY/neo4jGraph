@@ -1,34 +1,49 @@
-import { useGraphStore } from '../state/useStore';
+import { useGraphStore, UiGraphNode, UiGraphEdge } from '../state/useStore';
 
 const DetailsPanel = () => {
   const { selected } = useGraphStore();
 
   if (!selected) {
     return (
-      <div className="details-panel">
-        <h3>详情</h3>
-        <p>选择节点或边查看属性。</p>
-      </div>
+      <aside className="details-panel surface-card">
+        <div className="details-empty">
+          <h3>态势详情</h3>
+          <p>选择任意节点或关系，即可查看属性与上下文，辅助决策复盘。</p>
+        </div>
+      </aside>
     );
   }
 
   const entries = Object.entries(selected.data.properties);
+  const isNode = selected.type === 'node';
+  const identifier = isNode
+    ? (selected.data as UiGraphNode).key
+    : `${(selected.data as UiGraphEdge).source} → ${(selected.data as UiGraphEdge).target}`;
 
   return (
-    <div className="details-panel">
-      <h3>{selected.type === 'node' ? '节点' : '关系'}详情</h3>
-      <div style={{ fontSize: 14, color: '#94a3b8', marginBottom: 8 }}>ID: {'key' in selected.data ? selected.data.key : `${selected.data.source}->${selected.data.target}`}</div>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <tbody>
-          {entries.map(([key, value]) => (
-            <tr key={key} style={{ borderBottom: '1px solid #1e293b' }}>
-              <td style={{ padding: '6px 4px', color: '#94a3b8' }}>{key}</td>
-              <td style={{ padding: '6px 4px' }}>{JSON.stringify(value)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <aside className="details-panel surface-card">
+      <div className="section-title">
+        <span>{selected.type === 'node' ? '节点详情' : '关系详情'}</span>
+        <small>属性实时回传</small>
+      </div>
+      <div className="details-card">
+        <div className="details-meta">唯一标识：{identifier}</div>
+        {entries.length === 0 ? (
+          <p className="status-note">暂无额外属性。</p>
+        ) : (
+          <table className="details-table">
+            <tbody>
+              {entries.map(([key, value]) => (
+                <tr key={key}>
+                  <td>{key}</td>
+                  <td>{typeof value === 'object' ? JSON.stringify(value) : String(value)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </aside>
   );
 };
 

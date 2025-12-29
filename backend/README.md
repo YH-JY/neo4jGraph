@@ -1,6 +1,6 @@
 # Backend Service
 
-FastAPI 实现的后端，涵盖配置管理、K8s 数据采集、Neo4j 图谱写入、Cypher 查询代理、攻击路径分析、导入导出与认证。
+FastAPI 实现的后端，涵盖配置管理、K8s 数据采集、Neo4j 图谱写入、Cypher 查询代理、攻击路径分析与导入导出等开放 API。
 
 ## 运行
 

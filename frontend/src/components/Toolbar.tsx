@@ -2,7 +2,7 @@ import { useGraphStore } from '../state/useStore';
 import { Api } from '../services/api';
 
 const Toolbar = () => {
-  const { executeQuery } = useGraphStore();
+  const { executeQuery, nodes, edges } = useGraphStore();
 
   const handleExport = async (format: string) => {
     const blob = await Api.exportGraph(format);
@@ -15,32 +15,37 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="top-bar">
+    <header className="top-bar surface-card">
       <div>
-        <strong>云原生攻击路径平台</strong>
+        <p className="app-eyebrow">云原生攻防驾驶舱</p>
+        <h1 className="app-title">云原生攻击路径平台</h1>
+        <p className="app-subtitle">态势可视 · 风险闭环 · 决策共识</p>
       </div>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button style={buttonStyle} onClick={() => executeQuery('MATCH (n) RETURN n')}>
-          全量节点
-        </button>
-        <button style={buttonStyle} onClick={() => handleExport('png')}>
-          导出 PNG
-        </button>
-        <button style={buttonStyle} onClick={() => handleExport('json')}>
-          导出 JSON
-        </button>
+      <div className="top-actions">
+        <div className="status-pills">
+          <div className="status-pill">
+            <span>在线节点</span>
+            <strong>{nodes.length}</strong>
+          </div>
+          <div className="status-pill">
+            <span>图谱关系</span>
+            <strong>{edges.length}</strong>
+          </div>
+        </div>
+        <div className="action-buttons">
+          <button className="btn btn-ghost" onClick={() => executeQuery('MATCH (n) RETURN n LIMIT 500')}>
+            全量节点
+          </button>
+          <button className="btn btn-outline" onClick={() => handleExport('png')}>
+            导出 PNG
+          </button>
+          <button className="btn btn-primary" onClick={() => handleExport('json')}>
+            导出 JSON
+          </button>
+        </div>
       </div>
-    </div>
+    </header>
   );
-};
-
-const buttonStyle: React.CSSProperties = {
-  background: '#1e293b',
-  border: '1px solid #334155',
-  color: '#e2e8f0',
-  padding: '6px 12px',
-  borderRadius: 8,
-  cursor: 'pointer',
 };
 
 export default Toolbar;

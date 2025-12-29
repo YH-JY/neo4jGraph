@@ -47,12 +47,3 @@ class ExportRequest(BaseModel):
     format: str = Field(default="png")
     cypher: Optional[str] = None
 
-
-class TokenRequest(BaseModel):
-    username: str
-    password: str
-
-
-class TokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
