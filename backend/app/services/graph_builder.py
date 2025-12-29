@@ -279,3 +279,24 @@ def _service_account_key(sa: KubeResource) -> str:
     if uid:
         return uid
     return f"sa:{sa.metadata.get('namespace')}:{sa.metadata.get('name')}"
+
+
+
+def _sanitize_properties(props: Dict[str, Any]) -> Dict[str, Any]:
+    return {key: _sanitize_value(value) for key, value in props.items()}
+
+
+def _sanitize_value(value: Any) -> Any:
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, list):
+        sanitized: List[Any] = []
+        for item in value:
+            if isinstance(item, (dict, list)):
+                sanitized.append(_sanitize_value(item))
+            else:
+                sanitized.append(item)
+        return sanitized
+    if isinstance(value, dict):
+        return json.dumps(value, ensure_ascii=False)
+    return str(value)
